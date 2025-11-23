@@ -54,7 +54,7 @@ export default function AuthPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, mobile, role, password }),
+        body: JSON.stringify({ name, email, mobile, password }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -128,7 +128,7 @@ export default function AuthPage() {
             onChange={(e) => setMobile(e.target.value)}
             className="w-full px-3 py-2 rounded-md bg-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          <select
+          {/* <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
             className="w-full px-3 py-2 rounded-md bg-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -137,7 +137,7 @@ export default function AuthPage() {
             <option value="CLIENT">Client</option>
             <option value="TECHNICIEN">Technicien</option>
             <option value="ANALYSTE">Analyste</option>
-          </select>
+          </select> */}
           <input
             type="password"
             placeholder="Password"
