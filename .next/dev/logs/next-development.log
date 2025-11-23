@@ -1,6 +1,6 @@
-[00:00:02.262] Server  LOG      ✓ Ready in 1605ms
-[00:00:06.757] Server  LOG      ○ Compiling / ...
-[00:00:12.981] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:13.136] Browser WARN    Image with src "/Logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:56.678] Server  LOG     ✅MongoDB connected
-[00:00:56.681] Server  LOG     MongoDB URI: mongodb+srv://ProjetNextJs:P12QKE5OtxQR8SupXZQ9C@fdsdb.dffagbq.mongodb.net/FDS
+[00:00:03.086] Server  LOG      ✓ Ready in 2.2s
+[00:00:09.354] Server  LOG      ○ Compiling / ...
+[00:00:25.322] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:26.837] Browser WARN    Image with src "/Logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:02:23.677] Server  LOG     ✅MongoDB connected
+[00:02:23.680] Server  LOG     MongoDB URI: mongodb+srv://ProjetNextJs:P12QKE5OtxQR8SupXZQ9C@fdsdb.dffagbq.mongodb.net/FDS
