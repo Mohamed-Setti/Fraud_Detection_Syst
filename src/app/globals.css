@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  /* Light theme colors */
+  --background: #eaf2fb;       /* light soft blue */
+  --foreground: #0f1a2f;       /* dark navy for text */
+  
+  /* Primary and accent colors */
+  --primary: #1e40af;          /* strong navy */
+  --primary-hover: #1e3a8a;    /* darker navy */
+  --secondary: #0d9488;        /* teal */
+  --accent: #2563eb;           /* blue accent */
+  --warning: #f59e0b;
+  --success: #10b981;
+  
+  /* Surfaces */
+  --card-bg: #ffffff;
+  --border: #93c5fd;           /* light blue border */
+  
+  /* Text colors */
+  --text-primary: #0f1a2f;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark theme colors */
+    --background: #0f172a;       /* dark navy */
+    --foreground: #f1f5f9;       /* light text */
+    
+    --primary: #3b82f6;          /* vibrant blue */
+    --primary-hover: #2563eb;    
+    --secondary: #14b8a6;        /* teal */
+    --accent: #60a5fa;           /* lighter blue accent */
+    --warning: #fbbf24;
+    --success: #34d399;
+    
+    --card-bg: #1e293b;
+    --border: #1e40af;           /* navy border */
+    
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+  }
+}
+
+/* Base body styles */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Utility classes for Tailwind usage */
+.bg-primary { background-color: var(--primary); }
+.bg-secondary { background-color: var(--secondary); }
+.bg-accent { background-color: var(--accent); }
+
+.text-primary { color: var(--primary); }
+.text-secondary-color { color: var(--secondary); }
+.text-accent { color: var(--accent); }
+
+.border-default { border-color: var(--border); }
