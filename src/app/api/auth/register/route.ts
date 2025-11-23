@@ -6,9 +6,9 @@ export async function POST(req: Request) {
   try {
     await dbConnect();
 
-    const { name, email, mobile, password, role } = await req.json();
+    const { name, email, mobile, password } = await req.json();
 
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password) {
       return new Response(
         JSON.stringify({ error: "Missing fields" }),
         { status: 400 }
@@ -23,7 +23,6 @@ export async function POST(req: Request) {
       );
     }
 
-
     const passwordHash = await bcrypt.hash(password, 10);
 
     const newUser = new User({
@@ -31,7 +30,7 @@ export async function POST(req: Request) {
       email,
       mobile: mobile || "",
       passwordHash,
-      role,
+      role: "CLIENT",  // 🔥 FORCÉ CLIENT PAR DÉFAUT
       isAuthenticated: false
     });
 

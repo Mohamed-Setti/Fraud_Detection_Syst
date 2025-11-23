@@ -24,7 +24,7 @@ export default function RegisterPage() {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, mobile, role, password }),
+      body: JSON.stringify({ name, email, mobile, password }),
     });
 
     const data = await res.json();
@@ -75,16 +75,6 @@ export default function RegisterPage() {
             className="mt-2 block w-full rounded-md bg-gray-100 px-3 py-2 text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
           />
 
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="mt-2 block w-full rounded-md bg-gray-100 px-3 py-2 text-gray-900 outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
-          >
-            <option value="">Select a role</option>
-            <option value="CLIENT">Client</option>
-            <option value="TECHNICIEN">Technicien</option>
-            <option value="ANALYSTE">Analyste</option>
-          </select>
 
           <input
             type="password"
