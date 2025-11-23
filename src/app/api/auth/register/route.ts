@@ -6,8 +6,8 @@ export async function POST(req: Request) {
   try {
     await dbConnect();
 
-    const { name, email, mobile, password, role } = await req.json();
-
+    const { name, email, mobile, password } = await req.json();
+    const role = "CLIENT"; // Force role to CLIENT
     if (!name || !email || !password || !role) {
       return new Response(
         JSON.stringify({ error: "Missing fields" }),
