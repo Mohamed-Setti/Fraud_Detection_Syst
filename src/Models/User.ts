@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true },
   role: {
     type: String,
-    enum: ["CLIENT", "TECHNICIEN", "ANALYSTE", "ADMIN", "analystefinanciere"],
+    enum: ["CLIENT", "ANALYSTE", "ADMIN"],
     required: true
   },
   isAuthenticated: { type: Boolean, default: false },
