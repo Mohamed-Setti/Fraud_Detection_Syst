@@ -40,3 +40,25 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+export async function POST(req: NextRequest) {
+  try {
+    await dbConnect();
+    const data = await req.json();
+
+    const newTransaction = new Transaction({
+      ...data,
+      date: new Date(),
+      createdAt: new Date(),
+    });
+
+    const savedTransaction = await newTransaction.save();
+
+    return NextResponse.json(savedTransaction, { status: 201 });
+  } catch (error) {
+    console.error("Transaction POST error:", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    );
+  }
+}
