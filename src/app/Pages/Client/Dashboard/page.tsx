@@ -1,6 +1,7 @@
 'use client';
 
 import StatCard from "../../../component/StatCard";
+import LineChart from "@/app/component/linechart";
 
 export default function ClientDashboard() {
 
@@ -19,6 +20,15 @@ export default function ClientDashboard() {
     { date: "2025-11-13", id: "TXN123458", amount: "$2,300", type: "Deposit", status: "Normal" },
   ];
 
+  const sample = [
+    { label: "Jan", value: 30 },
+    { label: "Feb", value: 45 },
+    { label: "Mar", value: 28 },
+    { label: "Apr", value: 60 },
+    { label: "May", value: 52 },
+    { label: "Jun", value: 75 },
+  ];
+
   return (
     <div className="min-h-screen flex bg-gray-50 p-6">
 
@@ -32,9 +42,10 @@ export default function ClientDashboard() {
         </div>
 
         {/* ---- Analytics Charts ---- */}
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="p-6 bg-white text-gray-500 rounded-xl shadow h-64 flex items-center justify-center">
-            Line Chart Placeholder
+            <LineChart data={sample} height={180} strokeWidth={6} showArea showPoints={false} />
           </div>
           <div className="p-6 bg-white text-gray-500 rounded-xl shadow h-64 flex items-center justify-center">
             Bar Chart Placeholder
