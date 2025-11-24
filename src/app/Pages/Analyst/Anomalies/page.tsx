@@ -2,13 +2,20 @@
 import { useEffect, useState } from "react";
 import TransactionTable from "../../../component/TransactionTable";
 
+interface Transaction {
+  _id: string;
+  amount: number;
+  date: string;
+  status: string;
+}
+
 export default function Anomalie() {
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
     fetch("/api/analyst/transactions")
       .then((res) => res.json())
-      .then((data) => setTransactions(data));
+      .then((data: Transaction[]) => setTransactions(data));
   }, []);
 
   return (
