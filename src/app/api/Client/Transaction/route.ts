@@ -3,62 +3,34 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongodb";
 import Transaction from "@/Models/Transaction";
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
-    const body = await req.json();
-    const {
-      date,
-      amount,
-      type,
-      channel,
-      description,
-      balanceAfter,
-      compteSource,
-      compteDestination,
-    } = body;
+    // Récupération du paramètre ID dans l'URL s'il existe
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
 
-    // Validation des champs obligatoires
-    if (!date || amount === undefined || amount === null || !type || !channel) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+    // 👉 Si un ID est fourni → GET une seule transaction
+    if (id) {
+      const transaction = await Transaction.findById(id);
+
+      if (!transaction) {
+        return NextResponse.json(
+          { error: "Transaction not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(transaction, { status: 200 });
     }
 
-    const parsedAmount = Number(amount);
-    if (Number.isNaN(parsedAmount) || parsedAmount <= 0) {
-      return NextResponse.json(
-        { error: "Amount must be a positive number" },
-        { status: 400 }
-      );
-    }
+    // 👉 Sinon → GET toutes les transactions
+    const transactions = await Transaction.find().sort({ date: -1 });
 
-    const parsedBalanceAfter =
-      balanceAfter !== undefined && balanceAfter !== ""
-        ? Number(balanceAfter)
-        : undefined;
-
-    const newTransaction = new Transaction({
-      date: new Date(date),
-      amount: parsedAmount,
-      type,
-      channel,
-      description: description || undefined,
-      balanceAfter: parsedBalanceAfter,
-      compteSource: compteSource || undefined,
-      compteDestination: compteDestination || undefined,
-    });
-
-    await newTransaction.save();
-
-    return NextResponse.json(
-      { message: "Transaction created successfully" },
-      { status: 201 }
-    );
+    return NextResponse.json(transactions, { status: 200 });
   } catch (error) {
-    console.error("Transaction error:", error);
+    console.error("Transaction GET error:", error);
     return NextResponse.json(
       {
         error: "Something went wrong",

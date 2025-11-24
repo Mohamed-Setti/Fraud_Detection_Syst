@@ -2,6 +2,12 @@
 import { useEffect, useState } from "react";
 import StatCard from "../../../component/StatCard";
 
+type Transaction = {
+  amount?: number;
+  anomaly?: boolean;
+  // ajoute d'autres champs si ton API en renvoie
+};
+
 export default function Dashboard() {
   const [stats, setStats] = useState({
     totalTransactions: 0,
@@ -10,10 +16,27 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    // Exemple : récupérer des stats depuis le backend analyst
-    fetch("/api/analyst/stats")
+    fetch("/api/Client/Transaction")
       .then((res) => res.json())
-      .then((data) => setStats(data));
+      .then((transactions: Transaction[]) => {
+        console.log("Transactions reçues :", transactions);
+
+        const totalRevenue = transactions.reduce(
+          (sum: number, t: Transaction) => sum + (t.amount || 0),
+          0
+        );
+
+        const totalAnomalies = transactions.filter(
+          (t) => t.anomaly === true
+        ).length;
+
+        setStats({
+          totalTransactions: transactions.length,
+          totalAnomalies,
+          totalRevenue,
+        });
+      })
+      .catch((err) => console.error("Dashboard error:", err));
   }, []);
 
   return (
