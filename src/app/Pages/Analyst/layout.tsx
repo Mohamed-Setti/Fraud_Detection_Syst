@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 type LayoutProps = {
@@ -10,17 +11,28 @@ type LayoutProps = {
 };
 
 export default function AnalystLayout({ children }: LayoutProps) {
-  // Récupère les infos utilisateur depuis le localStorage
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const pathname = usePathname();
 
-  // Détermine le nom de la page à partir du chemin
+  // 🔥 State pour utilisateur (évite le crash SSR)
+  const [user, setUser] = useState<{ name?: string }>({});
+
+  // 🔥 Charger user uniquement côté client
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  // Détermine le nom de la page
   const lastSegment = pathname.split("/").filter(Boolean).pop() || "Dashboard";
-  const pageName = lastSegment.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  const pageName = lastSegment
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-      {/* Sidebar Analyste */}
+      {/* Sidebar */}
       <aside className="w-64 bg-blue-900 text-white p-6 flex flex-col">
         <div className="flex justify-center w-full p-6">
           <Image src="/Logo2.png" alt="Logo" width={185} height={185} />
@@ -34,9 +46,8 @@ export default function AnalystLayout({ children }: LayoutProps) {
         </nav>
       </aside>
 
-      {/* Main Content */}
+      {/* Main content */}
       <main className="flex-1">
-        {/* Header */}
         <div className="flex justify-between items-center mb-6 bg-white m-0 p-4">
           <h1 className="text-3xl font-bold text-blue-900">{pageName}</h1>
 
@@ -47,7 +58,10 @@ export default function AnalystLayout({ children }: LayoutProps) {
             </button>
 
             <div className="flex items-center gap-5">
-              <span className="font-medium text-gray-900">{user.name || "Analyst"}</span>
+              {/* 🔥 user.name ne crash plus */}
+              <span className="font-medium text-gray-900">
+                {user.name || "Analyst"}
+              </span>
             </div>
 
             <Link href="/">
