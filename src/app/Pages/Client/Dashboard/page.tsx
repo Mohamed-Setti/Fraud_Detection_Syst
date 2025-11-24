@@ -1,14 +1,16 @@
 'use client';
 
+import StatCard from "../../../component/StatCard";
+
 export default function ClientDashboard() {
 
   
   // Dummy data
   const summary = [
-    { title: "Total Transactions", value: "$12,450", color: "border-blue-700" },
-    { title: "Suspicious Transactions", value: "24", color: "border-red-600" },
-    { title: "Alerts Triggered", value: "7", color: "border-yellow-500" },
-    { title: "Account Balance", value: "$48,200", color: "border-green-600" },
+    { title: "Total Transactions", value: "$12,450", color: "blue" },
+    { title: "Suspicious Transactions", value: "24", color: "red" },
+    { title: "Alerts Triggered", value: "7", color: "yellow" },
+    { title: "Account Balance", value: "$48,200", color: "green" },
   ];
 
   const recentTransactions = [
@@ -25,10 +27,7 @@ export default function ClientDashboard() {
         {/* ---- SUMMARY CARDS ---- */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {summary.map((card) => (
-            <div key={card.title} className={`p-6 bg-white shadow rounded-xl border-l-4 ${card.color}`}>
-              <p className="text-sm text-gray-500">{card.title}</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{card.value}</p>
-            </div>
+            <StatCard key={card.title} title={card.title} value={card.value} color={card.color} />
           ))}
         </div>
 

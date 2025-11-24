@@ -43,9 +43,9 @@ export default function Dashboard() {
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-6">Analyst Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <StatCard title="Total Transactions" value={stats.totalTransactions} />
-        <StatCard title="Total Anomalies" value={stats.totalAnomalies} />
-        <StatCard title="Total Revenue" value={stats.totalRevenue} />
+        <StatCard title="Total Transactions" value={stats.totalTransactions} color="RED" />
+        <StatCard title="Total Anomalies" value={stats.totalAnomalies} color="BLUE"/>
+        <StatCard title="Total Revenue" value={stats.totalRevenue} color="GREEN" />
       </div>
     </div>
   );
