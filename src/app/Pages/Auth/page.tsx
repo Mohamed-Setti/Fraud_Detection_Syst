@@ -1,5 +1,7 @@
 'use client';
 
+// login route to Dashboard selon le role et register route to Dashboard Client apres inscription
+
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, User, Phone, CheckCircle, XCircle } from "lucide-react";
 
