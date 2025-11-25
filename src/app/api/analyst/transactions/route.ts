@@ -1,5 +1,5 @@
 import { dbConnect } from "@/lib/mongodb";
-import Transaction from "@/Models/Transaction"; // exemple d'un modèle transaction
+import Transaction from "../../../Models/Transaction"; // exemple d'un modèle transaction
 
 export async function GET(req: Request) {
   try {
