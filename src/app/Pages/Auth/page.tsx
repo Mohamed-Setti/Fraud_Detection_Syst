@@ -42,35 +42,39 @@ export default function AuthPage() {
     setPassword(pass);
     setPasswordStrength(calculatePasswordStrength(pass));
   };
+const handleLogin = async () => {
+  setLoginMessage("");
 
-  const handleLogin = async () => {
-    setLoginMessage("");
-    
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
-      });
-      const data = await res.json();
+  // Normaliser email
+  const emailToSend = loginEmail.trim().toLowerCase();
 
-      if (res.ok && data.token) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
-        setLoginMessage("success");
-        
-        // Redirection après 1 seconde
-        setTimeout(() => {
-          router.push("/Pages/Client/Dashboard");
-        }, 1000);
-      } else {
-        setLoginMessage(data.error || "Invalid credentials");
-      }
-    } catch (error) {
-      console.error(error);
-      setLoginMessage("Something went wrong. Please try again.");
+  try {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: emailToSend, password: loginPassword }), // <-- ici
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.token) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
+      setLoginMessage("success");
+
+      setTimeout(() => {
+        router.push("/Pages/Client/Dashboard");
+      }, 1000);
+    } else {
+      setLoginMessage(data.error || "Email ou mot de passe incorrect");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    setLoginMessage("Something went wrong. Please try again.");
+  }
+};
+
+
 
   const handleRegister = async () => {
     setRegisterMessage("");
