@@ -222,7 +222,7 @@ const handleLogin = async () => {
           </div>
           
           <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Créer un compte</h2>
-          <p className="text-gray-500 text-center mb-8">Rejoignez-nous dès aujourd'hui</p>
+          <p className="text-gray-500 text-center mb-8">Rejoignez-nous dès aujourd&apos;hui</p>
           
           <div className="space-y-4">
             <div className="relative">
@@ -328,12 +328,12 @@ const handleLogin = async () => {
               onClick={handleRegister}
               className="w-full py-3 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
             >
-              S'inscrire
+              S&apos;inscrire
             </button>
 
             <p className="text-xs text-gray-500 text-center">
               En vous inscrivant, vous acceptez nos{' '}
-              <a href="#" className="text-blue-600 hover:underline">conditions d'utilisation</a>
+              <a href="#" className="text-blue-600 hover:underline">conditions d&apos;utilisation</a>
             </p>
           </div>
         </div>
