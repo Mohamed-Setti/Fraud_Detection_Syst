@@ -103,6 +103,8 @@ const handleLogin = async () => {
         if (data.token) localStorage.setItem("token", data.token);
         
         setRegisterMessage("success");
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
         
         // Redirection après 1 seconde
         setTimeout(() => {
