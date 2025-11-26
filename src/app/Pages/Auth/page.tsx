@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock, User, Phone, CheckCircle, XCircle } from "lucide-react";
 
 export default function AuthPage() {
+  const router = useRouter();
   const [isRegisterActive, setIsRegisterActive] = useState(false);
 
   // Login state
@@ -42,17 +44,30 @@ export default function AuthPage() {
   const handleLogin = async () => {
     setLoginMessage("");
     
-    // Simulation d'authentification
-    setTimeout(() => {
-      if (loginEmail && loginPassword) {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.token) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
         setLoginMessage("success");
+        
+        // Redirection après 1 seconde
         setTimeout(() => {
-          console.log("Redirection vers dashboard");
+          router.push("/Pages/Client/Dashboard");
         }, 1000);
       } else {
-        setLoginMessage("error");
+        setLoginMessage(data.error || "Invalid credentials");
       }
-    }, 500);
+    } catch (error) {
+      console.error(error);
+      setLoginMessage("Something went wrong. Please try again.");
+    }
   };
 
   const handleRegister = async () => {
@@ -63,22 +78,37 @@ export default function AuthPage() {
       return;
     }
 
-    if (passwordStrength < 2) {
-      setRegisterMessage("Password is too weak");
-      return;
-    }
+    // Plus de validation de force de mot de passe - tous les mots de passe sont acceptés
 
-    // Simulation d'inscription
-    setTimeout(() => {
-      if (name && email && mobile && password) {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, mobile, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Stocker userId et compteId créés
+        if (data.userId) localStorage.setItem("userId", data.userId);
+        if (data.compteId) localStorage.setItem("compteId", data.compteId);
+        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+        if (data.token) localStorage.setItem("token", data.token);
+        
         setRegisterMessage("success");
+        
+        // Redirection après 1 seconde
         setTimeout(() => {
-          console.log("Redirection vers dashboard");
+          router.push("/Pages/Client/Dashboard");
         }, 1000);
       } else {
-        setRegisterMessage("error");
+        setRegisterMessage(data.error || "Registration failed");
       }
-    }, 500);
+    } catch (error) {
+      console.error(error);
+      setRegisterMessage("Something went wrong. Please try again.");
+    }
   };
 
   const getPasswordStrengthColor = () => {
