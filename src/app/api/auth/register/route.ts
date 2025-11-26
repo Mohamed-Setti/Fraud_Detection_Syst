@@ -22,13 +22,13 @@ export async function POST(req: Request) {
     }
 
     // Hash du mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
+    //const hashedPassword = await bcrypt.hash(password, 10);
 
     // 1️⃣ Création de l’utilisateur
     const user = new User({
       name,
       email,
-      password: hashedPassword,
+      password, //: hashedPassword,
       role
     });
     await user.save();
