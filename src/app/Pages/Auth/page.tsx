@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Mail, Lock, User, Phone, CheckCircle, XCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Phone, CheckCircle, XCircle, ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -149,12 +149,12 @@ const handleLogin = async () => {
     <div className="relative flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl  animate-pulse"></div>
         <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '2s'}}></div>
       </div>
 
       {/* Left: Login Form */}
-      <div className={`w-1/2 flex flex-col justify-center items-center p-10 z-10 transition-all duration-700 ${isRegisterActive ? 'opacity-50' : 'opacity-100'}`}>
+      <div className={`w-1/2 flex flex-col justify-center items-center p-10 z-10 transition-all duration-700 `}>
         <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md transform transition-all duration-500 hover:scale-[1.02]">
           <div className="flex justify-center mb-8">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-900 to-blue-700 rounded-full flex items-center justify-center shadow-lg">
@@ -225,7 +225,7 @@ const handleLogin = async () => {
       </div>
 
       {/* Right: Register Form */}
-      <div className={`w-1/2 flex flex-col justify-center items-center p-10 z-10 transition-all duration-700 ${!isRegisterActive ? 'opacity-50' : 'opacity-100'}`}>
+      <div className={"w-1/2 flex flex-col justify-center items-center p-10 z-10 transition-all duration-700 "}>
         <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md transform transition-all duration-500 hover:scale-[1.02]">
           <div className="flex justify-center mb-8">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-900 to-blue-700 rounded-full flex items-center justify-center shadow-lg">
@@ -363,18 +363,20 @@ const handleLogin = async () => {
       >
         <div className="text-center px-8 transform transition-all duration-500 hover:scale-105">
           <h2 className="text-5xl font-bold text-white mb-6 drop-shadow-lg">
-            {isRegisterActive ? "Déjà membre?" : "Nouveau ici?"}
+            {isRegisterActive ? "Nouveau ici?" : "Déjà membre?"}
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-sm">
             {isRegisterActive
-              ? "Connectez-vous pour accéder à votre espace personnel"
-              : "Créez un compte pour profiter de tous nos services"}
+              ? "Créez un compte pour profiter de tous nos services"
+              : "Connectez-vous pour accéder à votre espace personnel"}
           </p>
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full text-white border-2 border-white/30 hover:bg-white/30 transition-all">
             <span className="font-semibold">
-              {isRegisterActive ? "Se connecter" : "S'inscrire"}
+              {isRegisterActive ? "S'inscrire" : "Se connecter"}
             </span>
-            <span className="text-2xl">→</span>
+            <span className="text-2xl">
+              {isRegisterActive ? <ArrowRight/> : <ArrowLeft />}
+              </span>
           </div>
         </div>
         
