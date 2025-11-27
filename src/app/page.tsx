@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -8,42 +8,41 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-linear-to-b from-white via-gray-100 to-blue-700 min-h-screen flex items-center">
-        {/* Optional subtle overlay */}
-        <div className="absolute inset-0 bg-linear-to-br from-white via-gray-50 to-blue-700 opacity-90" />
+    <div className="relative flex min-h-screen bg-gradient-to-br from-blue-900 to-blue-700 overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-white/20 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-pulse"></div>
+        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-purple-100/20 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
 
-        <div className="container relative mx-auto px-4 py-20 flex flex-col items-center text-center">
-          {/* Logo */}
-          <div className="inline-flex items-center justify-center p-4 bg-white/30 rounded-full backdrop-blur-sm mb-6 shadow-lg">
-            <Image src="/Logo.png" alt="FinGuard AI" width={200} height={200} />
-          </div>
-
-          {/* text */}
-          <p className="text-xl md:text-2xl text-blue-700 dark:text-blue-700 max-w-2xl mb-8">
-            Plateforme intelligente de détection d’anomalies bancaires et d’analyse de transactions en temps réel
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-row sm:flex-col gap-4">
-            <button
-              onClick={() => router.push("/Pages/Auth")}
-              className="m-2 text-lg px-8 py-5 bg-blue-600 text-white font-semibold rounded-lg shadow-lg flex items-center gap-2 hover:bg-blue-700 transition"
-            >
-              Commencer maintenant
-              <ArrowRight className="h-5 w-5" />
-            </button>
-            {/* <button
-              onClick={() => router.push("/Pages/Auth/Registre")}
-              className="m-2 text-lg px-8 py-5 bg-white text-blue-700 font-semibold rounded-lg shadow-lg flex items-center gap-2 hover:bg-blue-50 transition"
-            >
-              Créer un compte
-              <ArrowRight className="h-5 w-5" />
-            </button> */}
-          </div>
+      {/* Hero content centered */}
+      <div className="flex flex-col justify-center items-center w-full z-10 px-6 py-20 text-center text-white">
+        {/* Logo */}
+        <div className="w-80 h-80 mb-8 bg-white/20 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm">
+          <Image src="/Logo FDS.svg" alt="FinGuard AI" width={250} height={250} />
         </div>
-      </section>
+
+        {/* Main Text */}
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          Plateforme intelligente de détection d’anomalies bancaires
+        </h1>
+        <p className="text-lg md:text-xl mb-8 max-w-2xl">
+          Analyse des transactions en temps réel avec IA et alertes automatisées
+        </p>
+
+        {/* CTA Button */}
+        <button
+          onClick={() => router.push("/Pages/Auth")}
+          className="flex items-center gap-2 px-8 py-5 bg-white text-blue-900 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+        >
+          Commencer maintenant
+          <ArrowRight className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Decorative circles */}
+      <div className="absolute top-10 right-10 w-20 h-20 border-4 border-white/30 rounded-full"></div>
+      <div className="absolute bottom-10 left-10 w-32 h-32 border-4 border-white/20 rounded-full"></div>
     </div>
   );
 }
