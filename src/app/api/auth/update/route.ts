@@ -1,5 +1,5 @@
 import { dbConnect } from "@/lib/mongodb";
-import User from "@/Models/User";
+import User from "../../../Models/User";
 import { NextResponse } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -28,7 +28,7 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const { name, email, mobile, password, oldPassword } = body;
 
-    const updateData: { name?: string; email?: string; mobile?: string; passwordHash?: string } = {
+    const updateData: { name?: string; email?: string; mobile?: string; password?: string } = {
       name,
       email,
       mobile,
@@ -50,7 +50,7 @@ export async function PUT(req: Request) {
       }
 
       // Verify old password
-      const isValidPassword = await bcrypt.compare(oldPassword, user.passwordHash);
+      const isValidPassword = await bcrypt.compare(oldPassword, user.password);
       if (!isValidPassword) {
         return NextResponse.json(
           { error: "Old password is incorrect" },
@@ -59,14 +59,14 @@ export async function PUT(req: Request) {
       }
 
       // Hash new password
-      updateData.passwordHash = await bcrypt.hash(password, 10);
+      updateData.password = await bcrypt.hash(password, 10);
     }
 
     const updatedUser = await User.findByIdAndUpdate(
       decoded.id,
       updateData,
       { new: true }
-    ).select("-passwordHash");
+    ).select("-password");
 
     return NextResponse.json({ user: updatedUser });
 

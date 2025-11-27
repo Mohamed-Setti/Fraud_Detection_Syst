@@ -2,8 +2,16 @@
 import { useEffect, useState } from "react";
 import UserTable from "../../component/UserTable";
 
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  // Add other user properties as needed
+};
+
 export default function AdminDashboard() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const fetchUsers = async () => {
     const res = await fetch("/api/admin/users");
@@ -12,7 +20,20 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    let isMounted = true;
+    (async () => {
+      try {
+        const res = await fetch("/api/admin/users");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (isMounted) setUsers(data);
+      } catch (e) {
+        console.error("Failed to load users", e);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

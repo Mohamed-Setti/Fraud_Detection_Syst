@@ -1,5 +1,6 @@
 import { dbConnect } from "@/lib/mongodb";
 import User from "../../../Models/User";
+import Compte from "../../../Models/Compte";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -22,7 +23,9 @@ export async function POST(req: Request) {
     if (!isMatch) {
       return new Response(JSON.stringify({ error: "Invalid credentials" }), { status: 401 });
     }
-
+    
+    const compte = await Compte.findOne({ owner: user._id });
+    
     const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: "1d" });
 
     return new Response(JSON.stringify({
@@ -33,7 +36,15 @@ export async function POST(req: Request) {
         name: user.name,
         email: user.email,
         role: user.role,
-      }
+      },
+      compte: compte ? {
+        id: compte._id,
+        soldeActuel: compte.soldeActuel,
+        typeCompte: compte.typeCompte,
+        devise: compte.devise,
+        numeroCompte: compte.numeroCompte,
+      } : null
+      //compteId: compte._id
     }), { status: 200 });
 
   } catch (error) {

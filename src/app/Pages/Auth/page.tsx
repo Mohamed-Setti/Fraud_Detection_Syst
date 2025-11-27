@@ -60,9 +60,18 @@ const handleLogin = async () => {
     if (res.ok && data.token) {
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
+      localStorage.setItem("account", JSON.stringify(data.compte));
       setLoginMessage("success");
 
       setTimeout(() => {
+        if (data.user.role === "ADMIN") {
+            router.push("/Pages/Admin");
+            return;
+          }
+          if (data.user.role === "ANALYSTE_FINANCIERE") {
+            router.push("/Pages/Analyst/Dashboard");
+            return;
+          }
         router.push("/Pages/Client/Dashboard");
       }, 1000);
     } else {
@@ -95,14 +104,17 @@ const handleLogin = async () => {
 
       const data = await res.json();
 
-      if (res.ok) {
+      if (res.ok && data) {
         // Stocker userId et compteId créés
-        if (data.userId) localStorage.setItem("userId", data.userId);
-        if (data.compteId) localStorage.setItem("compteId", data.compteId);
-        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
-        if (data.token) localStorage.setItem("token", data.token);
+        // if (data.userId) localStorage.setItem("userId", data.userId);
+        // if (data.compteId) localStorage.setItem("compteId", data.compteId);
+        // if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+        // if (data.token) localStorage.setItem("token", data.token);
         
         setRegisterMessage("success");
+        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("accountID", data.compteId);
+        localStorage.setItem("token", data.token);
         
         // Redirection après 1 seconde
         setTimeout(() => {
@@ -222,7 +234,7 @@ const handleLogin = async () => {
           </div>
           
           <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Créer un compte</h2>
-          <p className="text-gray-500 text-center mb-8">Rejoignez-nous dès aujourd'hui</p>
+          <p className="text-gray-500 text-center mb-8">Rejoignez-nous dès aujourd&apos;hui</p>
           
           <div className="space-y-4">
             <div className="relative">
@@ -328,12 +340,12 @@ const handleLogin = async () => {
               onClick={handleRegister}
               className="w-full py-3 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
             >
-              S'inscrire
+              S&apos;inscrire
             </button>
 
             <p className="text-xs text-gray-500 text-center">
               En vous inscrivant, vous acceptez nos{' '}
-              <a href="#" className="text-blue-600 hover:underline">conditions d'utilisation</a>
+              <a href="#" className="text-blue-600 hover:underline">conditions d&apos;utilisation</a>
             </p>
           </div>
         </div>

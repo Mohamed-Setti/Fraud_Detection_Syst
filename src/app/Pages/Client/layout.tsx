@@ -24,16 +24,18 @@ export default function Layout({ children }: LayoutProps) {
   const pathname = usePathname();
 
   // State pour utilisateur (évite le crash SSR)
-  const [user, setUser] = useState<{ name?: string }>({});
-  const [notifications, setNotifications] = useState(2);
-
-  // Charger user uniquement côté client
-  useEffect(() => {
+  const [user, setUser] = useState<{ name?: string }>(() => {
     if (typeof window !== "undefined") {
-      const savedUser = localStorage.getItem("user");
-      if (savedUser) setUser(JSON.parse(savedUser));
+      try {
+        const savedUser = localStorage.getItem("user");
+        return savedUser ? JSON.parse(savedUser) : {};
+      } catch {
+        return {};
+      }
     }
-  }, []);
+    return {};
+  });
+  const [notifications, setNotifications] = useState(2);
 
   const lastSegment = pathname.split("/").filter(Boolean).pop() || "Dashboard";
   const pageName = lastSegment
@@ -153,8 +155,9 @@ export default function Layout({ children }: LayoutProps) {
                 <button
                   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 font-medium"
                   onClick={() => {
-                    localStorage.removeItem("user");
-                    localStorage.removeItem("token");
+                    // localStorage.removeItem("user");
+                    // localStorage.removeItem("token");
+                    localStorage.clear();
                   }}
                 >
                   <LogOut className="w-4 h-4" />
