@@ -31,7 +31,7 @@ export default function Layout({ children }: LayoutProps) {
 
         <nav className="flex-1 space-y-4">
           <a href="./Dashboard" className="block p-2 rounded hover:bg-blue-800">Dashboard</a>
-          <a href="./Transaction" className="block p-2 rounded hover:bg-blue-800">Transactions</a>
+          <a href="./Admin/RegistreAnalyste" className="block p-2 rounded hover:bg-blue-800">Add Analyst</a>
           <a href="#" className="block p-2 rounded hover:bg-blue-800">Alerts</a>
           <a href="#" className="block p-2 rounded hover:bg-blue-800">Reports</a>
           <a href="./Settings" className="block p-2 rounded hover:bg-blue-800">Settings</a>
@@ -55,8 +55,7 @@ export default function Layout({ children }: LayoutProps) {
             <Link href="/">
                 <button className="mt-auto p-2 bg-red-600 rounded hover:bg-red-500" 
                   onClick={() => {
-                    localStorage.removeItem("user");
-                    localStorage.removeItem("token");
+                    localStorage.clear();
                   }}>
                   Logout
                   </button>

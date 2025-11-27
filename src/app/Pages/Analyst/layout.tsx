@@ -149,8 +149,7 @@ export default function AnalystLayout({ children }: LayoutProps) {
                 <button
                   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 font-medium"
                   onClick={() => {
-                    localStorage.removeItem("user");
-                    localStorage.removeItem("token");
+                    localStorage.clear();
                   }}
                 >
                   <LogOut className="w-4 h-4" />

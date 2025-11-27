@@ -64,6 +64,14 @@ const handleLogin = async () => {
       setLoginMessage("success");
 
       setTimeout(() => {
+        if (data.user.role === "ADMIN") {
+            router.push("/Pages/Admin");
+            return;
+          }
+          if (data.user.role === "ANALYSTE_FINANCIERE") {
+            router.push("/Pages/Analyst/Dashboard");
+            return;
+          }
         router.push("/Pages/Client/Dashboard");
       }, 1000);
     } else {

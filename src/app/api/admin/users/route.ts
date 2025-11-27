@@ -1,5 +1,5 @@
 import { dbConnect } from "@/lib/mongodb";
-import User from "@/Models/User";
+import User from "../../../Models/User";
 
 export async function GET() {
   try {

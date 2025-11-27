@@ -1,5 +1,5 @@
 import { dbConnect } from "@/lib/mongodb";
-import User from "@/Models/User";
+import User from "../../../../Models/User";
 
 interface Params {
   id: string;
