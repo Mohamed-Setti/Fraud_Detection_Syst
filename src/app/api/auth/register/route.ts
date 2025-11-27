@@ -51,7 +51,12 @@ export async function POST(req: Request) {
     return new Response(
       JSON.stringify({
         message: "User and account created successfully",
-        userId: user._id,
+        user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        },
         compteId: compte._id
       }),
       { status: 201 }

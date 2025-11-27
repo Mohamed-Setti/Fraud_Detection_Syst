@@ -60,6 +60,7 @@ const handleLogin = async () => {
     if (res.ok && data.token) {
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
+      localStorage.setItem("account", JSON.stringify(data.compte));
       setLoginMessage("success");
 
       setTimeout(() => {
@@ -95,15 +96,16 @@ const handleLogin = async () => {
 
       const data = await res.json();
 
-      if (res.ok) {
+      if (res.ok && data) {
         // Stocker userId et compteId créés
-        if (data.userId) localStorage.setItem("userId", data.userId);
-        if (data.compteId) localStorage.setItem("compteId", data.compteId);
-        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
-        if (data.token) localStorage.setItem("token", data.token);
+        // if (data.userId) localStorage.setItem("userId", data.userId);
+        // if (data.compteId) localStorage.setItem("compteId", data.compteId);
+        // if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+        // if (data.token) localStorage.setItem("token", data.token);
         
         setRegisterMessage("success");
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("accountID", data.compteId);
         localStorage.setItem("token", data.token);
         
         // Redirection après 1 seconde
