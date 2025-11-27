@@ -66,7 +66,7 @@ export default function Layout({ children }: LayoutProps) {
         {/* Logo */}
         <div className="flex justify-center w-full p-8 relative z-10">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 shadow-xl">
-            <Image src="/Logo2.png" alt="Logo" width={150} height={150} />
+            <Image src="/Logo FDS.svg" alt="Logo" width={150} height={150} />
           </div>
         </div>
 
