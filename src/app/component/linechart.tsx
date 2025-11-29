@@ -1,4 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
+"use client";
+
 import React, { useMemo, useRef, useState, useEffect } from "react";
 
 export type Point = {

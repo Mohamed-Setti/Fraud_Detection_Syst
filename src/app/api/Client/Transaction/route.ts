@@ -1,10 +1,19 @@
-// app/api/Client/Transaction/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { dbConnect } from "@/lib/mongodb";
 import Transaction from "../../../Models/Transaction";
 import Compte from "../../../Models/Compte";
 import { Channel, StatutTransaction, TypeTransaction } from "../../../Models/enums";
+import jwt from "jsonwebtoken";
 
+/**
+ * GET:
+ * - if id query param -> return that transaction
+ * - else try to determine userId:
+ *    1) from Authorization: Bearer <token> (preferred)
+ *    2) or from query param userId (fallback, less secure)
+ * - if userId found -> return only transactions for that user
+ * - otherwise -> return all transactions (or change to 401 if you want)
+ */
 export async function GET(req: NextRequest) {
   try {
     await dbConnect();
@@ -20,7 +29,53 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(transaction, { status: 200 });
     }
 
-    const transactions = await Transaction.find().sort({ date: -1 });
+    // 1) try Authorization header -> decode token to get userId
+    let userId: string | null = null;
+    const authHeader = req.headers.get("authorization") || req.headers.get("Authorization") || "";
+    if (authHeader) {
+      const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : authHeader;
+      try {
+        const secret = process.env.JWT_SECRET;
+        if (!secret) {
+          console.warn("JWT_SECRET not defined on server");
+        } else {
+          const payload = jwt.verify(token, secret) as any;
+          userId = payload.sub || payload.userId || payload.id || null;
+        }
+      } catch (err) {
+        console.warn("Invalid JWT token:", err instanceof Error ? err.message : err);
+        // invalid token -> ignore and fallback to query param
+        userId = null;
+      }
+    }
+
+    // 2) fallback: userId query param (insecure)
+    if (!userId) {
+      const qUser = searchParams.get("userId");
+      if (qUser) userId = qUser;
+    }
+
+    // 3) build filter
+    const filter: any = {};
+    if (userId) {
+      filter.user = userId;
+    } else {
+      // No userId: keep returning all (or change to return 401 to require auth)
+      // return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // optional: apply other filters (search, status, date range)
+    const search = searchParams.get("search");
+    if (search) {
+      filter.$or = [
+        { _id: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { compteSource: { $regex: search, $options: "i" } },
+        { compteDestination: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const transactions = await Transaction.find(filter).sort({ date: -1 });
     return NextResponse.json(transactions, { status: 200 });
   } catch (error) {
     console.error("Transaction GET error:", error);
