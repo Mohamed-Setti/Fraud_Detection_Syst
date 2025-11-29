@@ -83,7 +83,7 @@ export default function AlertesPage() {
   const criticalCount = alerts.filter(a => a.type === 'critical' && !a.read).length;
 
   const filteredAndSortedAlerts = useMemo(() => {
-    let filtered = alerts.filter(a => {
+    const filtered = alerts.filter(a => {
       const matchesSearch = a.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                            a.message.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesType = filterType === 'all' || a.type === filterType;
@@ -134,7 +134,7 @@ export default function AlertesPage() {
                 )}
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Centre d'Alertes</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Centre d&apos;Alertes</h1>
                 <p className="text-gray-600 mt-1">Gérez vos notifications et alertes système</p>
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function AlertesPage() {
             
             <select 
               value={sortBy} 
-              onChange={e => setSortBy(e.target.value as any)} 
+              onChange={e => setSortBy(e.target.value as 'date' | 'type' | 'status')} 
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all font-medium"
             >
               <option value="date">Trier par date</option>
@@ -240,10 +240,10 @@ export default function AlertesPage() {
           {showFilters && (
             <div className="mt-4 pt-4 border-t flex gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Type d'alerte</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Type d&apos;alerte</label>
                 <select 
                   value={filterType} 
-                  onChange={e => setFilterType(e.target.value as any)} 
+                  onChange={e => setFilterType(e.target.value as 'all' | 'success' | 'critical' | 'warning' | 'info')} 
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">Tous les types</option>
@@ -258,7 +258,7 @@ export default function AlertesPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Statut de lecture</label>
                 <select 
                   value={filterRead} 
-                  onChange={e => setFilterRead(e.target.value as any)} 
+                  onChange={e => setFilterRead(e.target.value as 'all' | 'read' | 'unread')} 
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">Toutes</option>
