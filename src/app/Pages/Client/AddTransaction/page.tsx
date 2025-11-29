@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useNotifications } from "@/app/component/useNotifications";    
 
-// Match backend schema enums
-type TxType = "OTHER" | "TRANSFER" | "PAYMENT" | "WITHDRAWAL" | "DEPOSIT";
-type Channel = "online" | "branch" | "atm" | "pos" | "mobile";
 
-// Client-only date display
+// Match backend enums
+type TxType = "CASH_IN" | "CASH_OUT" | "PAYMENT" | "TRANSFER" | "DEBIT" | "OTHER";
+type Channel = "ONLINE" | "BRANCH" | "ATM" | "POS" | "MOBILE";
+
+// Client date display
 function ClientDate({ isoDate }: { isoDate: string }) {
   if (!isoDate) return <span>-</span>;
   return <span>{new Date(isoDate).toLocaleString()}</span>;
@@ -17,18 +19,21 @@ function ClientDate({ isoDate }: { isoDate: string }) {
 
 export default function AddTransactionPage() {
   const router = useRouter();
+  const { addNotification } = useNotifications();
 
   const [amount, setAmount] = useState<number | "">("");
   const [type, setType] = useState<TxType>("OTHER");
-  const [channel, setChannel] = useState<Channel>("online");
+  const [channel, setChannel] = useState<Channel>("ONLINE");
   const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 16));
   const [description, setDescription] = useState("");
   const [balanceAfter, setBalanceAfter] = useState<number | "">("");
+
   const [compteSource, setCompteSource] = useState("");
   const [compteDestination, setCompteDestination] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  // Basic frontend validation
+  // Validate inputs
   function validate() {
     if (amount === "" || Number.isNaN(Number(amount))) {
       alert("Please enter a valid amount");
@@ -41,25 +46,31 @@ export default function AddTransactionPage() {
     return true;
   }
 
-  // Form submission
+  // Submit
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
 
+    // Get stored user
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const account = JSON.parse(localStorage.getItem("account") || "{}");
+
     const payload = {
       date: new Date(date).toISOString(),
-      amount: Number(amount),
-      type,
-      channel,
+      montant: Number(amount),
+      userId: user.id,                       // ✔ backend required field
+      type: type.toUpperCase(),              // ✔ ensure enum format
+      channel: channel.toUpperCase(),        // ✔ ensure enum format
       description: description || undefined,
-      balanceAfterSource: balanceAfter === "" ? undefined : Number(balanceAfter),
-      compteSource: compteSource || undefined,
-      compteDestination: compteDestination || undefined,
+
+      compteSourceId: account?.id || undefined,           // ✔ backend expected
+      compteDestinationId: compteDestination || undefined // (optional)
     };
 
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const token = localStorage.getItem("token");
+
       const res = await fetch("/api/Client/Transaction", {
         method: "POST",
         headers: {
@@ -73,13 +84,16 @@ export default function AddTransactionPage() {
         const err = await res.json().catch(() => null);
         throw new Error(err?.error || `HTTP ${res.status}`);
       }
-
-      await res.json();
+      addNotification({
+        title: "Nouvelle transaction",
+        message: `${payload.type} • ${Number(payload.montant).toFixed(2)} ${payload.compteDestinationId ? "→ " + payload.compteDestinationId : ""}`,
+        timestamp: Date.now(),
+      });
       alert("Transaction added successfully");
       router.push("./Transaction");
+
     } catch (error: unknown) {
-      console.error("Add transaction error:", error);
-      const message = error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message : "Unknown error";
       alert("Error creating transaction: " + message);
     } finally {
       setLoading(false);
@@ -100,22 +114,25 @@ export default function AddTransactionPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow space-y-4">
+
+            {/* Amount / Date / Type / Channel */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Amount */}
+
               <label className="flex flex-col">
                 <span className="text-sm text-gray-600">Amount</span>
                 <input
                   type="number"
                   step="0.01"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                  onChange={(e) =>
+                    setAmount(e.target.value === "" ? "" : Number(e.target.value))
+                  }
                   className="mt-1 p-2 border rounded text-gray-900"
                   placeholder="e.g. 1250.00"
                   required
                 />
               </label>
 
-              {/* Date */}
               <label className="flex flex-col">
                 <span className="text-sm text-gray-600">Date & time</span>
                 <input
@@ -127,7 +144,6 @@ export default function AddTransactionPage() {
                 />
               </label>
 
-              {/* Type */}
               <label className="flex flex-col">
                 <span className="text-sm text-gray-600">Type</span>
                 <select
@@ -135,51 +151,28 @@ export default function AddTransactionPage() {
                   onChange={(e) => setType(e.target.value as TxType)}
                   className="mt-1 p-2 border rounded text-gray-900"
                 >
-                  <option value="DEPOSIT">Deposit</option>
-                  <option value="WITHDRAWAL">Withdrawal</option>
+                  <option value="CASH_IN">Deposit</option>
+                  <option value="CASH_OUT">Withdrawal</option>
                   <option value="TRANSFER">Transfer</option>
                   <option value="PAYMENT">Payment</option>
+                  <option value="DEBIT">Debit</option>
                   <option value="OTHER">Other</option>
                 </select>
               </label>
 
-              {/* Channel */}
               <label className="flex flex-col">
                 <span className="text-sm text-gray-600">Channel</span>
                 <select
                   value={channel}
-                  onChange={(e) => setChannel(e.target.value as Channel)}
+                  onChange={(e) => setChannel(e.target.value.toUpperCase() as Channel)}
                   className="mt-1 p-2 border rounded text-gray-900"
                 >
-                  <option value="online">Online</option>
-                  <option value="branch">Branch</option>
-                  <option value="atm">ATM</option>
-                  <option value="pos">POS</option>
-                  <option value="mobile">Mobile</option>
+                  <option value="ONLINE">Online</option>
+                  <option value="BRANCH">Branch</option>
+                  <option value="ATM">ATM</option>
+                  <option value="POS">POS</option>
+                  <option value="MOBILE">Mobile</option>
                 </select>
-              </label>
-            </div>
-
-            {/* Accounts */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className="flex flex-col">
-                <span className="text-sm text-gray-600">Source Account (optional)</span>
-                <input
-                  value={compteSource}
-                  onChange={(e) => setCompteSource(e.target.value)}
-                  className="mt-1 p-2 border rounded text-gray-900"
-                  placeholder="account id or number"
-                />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-sm text-gray-600">Destination Account (optional)</span>
-                <input
-                  value={compteDestination}
-                  onChange={(e) => setCompteDestination(e.target.value)}
-                  className="mt-1 p-2 border rounded text-gray-900"
-                  placeholder="account id or number"
-                />
               </label>
             </div>
 
@@ -202,13 +195,15 @@ export default function AddTransactionPage() {
                 type="number"
                 step="0.01"
                 value={balanceAfter}
-                onChange={(e) => setBalanceAfter(e.target.value === "" ? "" : Number(e.target.value))}
+                onChange={(e) =>
+                  setBalanceAfter(e.target.value === "" ? "" : Number(e.target.value))
+                }
                 className="mt-1 p-2 border rounded text-gray-900"
                 placeholder="e.g. 5000.00"
               />
             </label>
 
-            {/* Buttons */}
+            {/* Save + Cancel */}
             <div className="flex items-center gap-3 mt-4">
               <button
                 type="submit"
@@ -227,31 +222,19 @@ export default function AddTransactionPage() {
               </button>
             </div>
 
-            {/* Preview */}
+            {/* PREVIEW */}
             <div className="mt-6 p-4 bg-gray-50 rounded border">
               <h4 className="font-semibold text-gray-800 mb-2">Preview</h4>
               <div className="text-gray-700">
-                <p>
-                  <span className="font-medium">Amount:</span> {amount === "" ? "-" : `$${Number(amount).toFixed(2)}`}
-                </p>
-                <p>
-                  <span className="font-medium">Type:</span> {type}
-                </p>
-                <p>
-                  <span className="font-medium">Channel:</span> {channel}
-                </p>
-                <p>
-                  <span className="font-medium">Date:</span> <ClientDate isoDate={date} />
-                </p>
-                <p>
-                  <span className="font-medium">Description:</span> {description || "-"}
-                </p>
-                <p>
-                  <span className="font-medium">Balance After:</span>{" "}
-                  {balanceAfter === "" ? "-" : `$${Number(balanceAfter).toFixed(2)}`}
-                </p>
+                <p><span className="font-medium">Amount:</span> {amount === "" ? "-" : `$${Number(amount).toFixed(2)}`}</p>
+                <p><span className="font-medium">Type:</span> {type}</p>
+                <p><span className="font-medium">Channel:</span> {channel}</p>
+                <p><span className="font-medium">Date:</span> <ClientDate isoDate={date} /></p>
+                <p><span className="font-medium">Description:</span> {description || "-"}</p>
+                <p><span className="font-medium">Balance After:</span> {balanceAfter === "" ? "-" : `$${Number(balanceAfter).toFixed(2)}`}</p>
               </div>
             </div>
+
           </form>
         </div>
       </main>
