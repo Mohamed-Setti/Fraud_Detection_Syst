@@ -28,10 +28,6 @@ export default function TransactionsPageClient() {
         return;
       }
 
-      // Option A: pass userId as query (quick & simple)
-      //const res = await fetch(`/api/Client/Transaction?userId=${encodeURIComponent(userId)}&page=${p}&limit=${limit}`);
-
-      // Option B (recommended even here): pass Authorization header with token
       const token = localStorage.getItem("token");
        const res = await fetch(`/api/Client/Transaction?page=${p}&limit=${limit}`, {
          headers: { Authorization: `Bearer ${token}` }

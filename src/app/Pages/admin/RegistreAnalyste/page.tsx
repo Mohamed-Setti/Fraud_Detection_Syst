@@ -10,17 +10,17 @@ export default function RegisterPage() {
   const [mobile, setMobile] = useState("");
   const role = "ANALYSTE_FINANCIERE";
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  //const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   //const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
-      return;
-    }
+    // if (password !== confirmPassword) {
+    //   setMessage("Passwords do not match");
+    //   return;
+    // }
 
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -36,7 +36,7 @@ export default function RegisterPage() {
       setEmail("");
       setMobile("");
       setPassword("");
-      setConfirmPassword("");
+      //setConfirmPassword("");
       // router.push("./Login");
     } else {
       setMessage(data.error || "Registration failed");
@@ -44,13 +44,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 py-12">
+    <div className="flex  items-center justify-center bg-gray-100 px-4 py-12">
       {/* Card Container */}
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <Image src="/Logo.png" alt="Logo" width={150} height={150} />
-        </div>
 
         <h2 className="text-center text-2xl font-bold tracking-tight text-gray-900 mb-6">
           Add new analyst account
@@ -101,13 +98,13 @@ export default function RegisterPage() {
             className="mt-2 block w-full rounded-md bg-gray-100 px-3 py-2 text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
           />
 
-          <input
+          {/* <input
             type="password"
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             className="mt-2 block w-full rounded-md bg-gray-100 px-3 py-2 text-gray-900 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
-          />
+          /> */}
 
           {message && (
             <p className="text-sm text-red-500 text-center">{message}</p>
@@ -117,18 +114,8 @@ export default function RegisterPage() {
             type="submit"
             className="w-full flex justify-center rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold shadow hover:bg-indigo-500 transition"
           >
-            Sign Up
+            Add Analyst
           </button>
-
-          <div className="flex justify-between mt-4 text-sm text-gray-900">
-            <span>Already have an account?</span>
-            <a
-              href="./Login"
-              className="font-semibold text-indigo-600 hover:text-indigo-500"
-            >
-              Log In
-            </a>
-          </div>
         </form>
       </div>
     </div>
