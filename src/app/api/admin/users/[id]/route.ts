@@ -1,36 +1,36 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs"; // optional, if you need Node features
+export const runtime = "nodejs";
+
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+
+  // ... fetch user by id ...
+  return NextResponse.json({ id, user: {} });
+}
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await context.params;
 
-  // If you expect JSON body:
   const body = await req.json(); // e.g., { role: 'analyst', ... }
-
-  // ... perform your update logic here ...
+  // ... update logic ...
 
   return NextResponse.json({ ok: true, id });
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
-  // ... fetch user by id ...
-  return NextResponse.json({ id, user: { /* ... */ } });
-}
-
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await context.params;
+
   // ... delete logic ...
   return NextResponse.json({ ok: true, id });
 }
