@@ -1,54 +1,36 @@
-import { dbConnect } from "@/lib/mongodb";
-import User from "../../../../Models/User";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-interface Params {
-  id: string;
-}
+export const runtime = "nodejs"; // optional, if you need Node features
 
 export async function PUT(
-  req: Request,
-  { params }: { params: Params }
+  req: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  try {
-    await dbConnect();
+  const { id } = params;
 
-    const { id } = params;
-    const { role } = await req.json();
+  // If you expect JSON body:
+  const body = await req.json(); // e.g., { role: 'analyst', ... }
 
-    if (!role) {
-      return Response.json({ error: "Role is required" }, { status: 400 });
-    }
+  // ... perform your update logic here ...
 
-    const validRoles = ["admin", "analyst", "user"];
-    if (!validRoles.includes(role)) {
-      return Response.json({ error: "Invalid role" }, { status: 400 });
-    }
+  return NextResponse.json({ ok: true, id });
+}
 
-    const updatedUser = await User.findByIdAndUpdate(id, { role }, { new: true });
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  // ... fetch user by id ...
+  return NextResponse.json({ id, user: { /* ... */ } });
+}
 
-    if (!updatedUser) {
-      return Response.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
-    }
-
-    return Response.json({
-      message: "Role updated successfully",
-      user: updatedUser,
-    });
-
-  } catch (error) {
-    if (error instanceof Error) {
-      return Response.json(
-        { error: "Failed to update role", details: error.message },
-        { status: 500 }
-      );
-    }
-
-    return Response.json(
-      { error: "Failed to update role", details: "Unknown error" },
-      { status: 500 }
-    );
-  }
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  // ... delete logic ...
+  return NextResponse.json({ ok: true, id });
 }
