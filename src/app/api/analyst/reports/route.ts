@@ -1,5 +1,5 @@
 import { dbConnect } from "@/lib/mongodb";
-import Report from "@/Models/Rapport"; // exemple modèle rapport
+import Report from "@/app/Models/Rapport";
 
 export async function GET(req: Request) {
   try {
